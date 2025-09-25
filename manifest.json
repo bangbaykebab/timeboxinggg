@@ -1,10 +1,6 @@
-
-  <!-- Below are recommended extra files you must place in the same Netlify site root. -->
-  <!-- manifest.json (create at /manifest.json) -->
-  <!--
   {
-    "name": "Time Boxing Checklist",
-    "short_name": "TimeBox",
+    "name": "Time Boxing",
+    "short_name": "TimeBoxing",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#f6f7fb",
@@ -14,4 +10,3 @@
       {"src":"/icon-512.png","sizes":"512x512","type":"image/png"}
     ]
   }
-  -->
