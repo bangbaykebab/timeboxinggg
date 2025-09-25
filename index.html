@@ -2,697 +2,439 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Time Boxing Checklist</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0A84FF">
+  <title>Time Boxing Checklist (PWA)</title>
 
-  <!-- PWA / iOS meta -->
-  <meta name="theme-color" content="#007aff" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' rx='12' fill='%23007aff'/%3E%3Ctext x='50%25' y='54%25' font-size='32' text-anchor='middle' fill='white' font-family='system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial'%3ET%3C/text%3E%3C/svg%3E" />
+  <!-- Link manifest (create file manifest.json with content provided below) -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 
   <style>
-    /* Basic iOS-ish look & responsive */
+    /* Basic iOS-like modern design */
     :root{
-      --bg:#f2f5fb;
-      --card:#fff;
-      --accent:#007aff;
-      --muted:#7a869a;
+      --bg: #f6f7fb;
+      --card:#ffffff;
+      --accent:#0A84FF; /* iOS blue */
+      --muted:#8893a7;
       --radius:14px;
-      --shadow: 0 8px 20px rgba(10,20,40,0.08);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     }
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:linear-gradient(180deg,#f7fbff 0%, var(--bg) 100%);
-      font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui;
-      color:#122;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding-bottom:88px; /* for bottom nav */
-    }
+    html,body{height:100%;margin:0;background:var(--bg);color:#0b1320}
+    .app{min-height:100vh;display:flex;flex-direction:column}
+    header{padding:18px 18px 6px}
+    .title{font-size:20px;font-weight:600}
+    main{flex:1;padding:0 16px 80px}
 
-    .app {
-      max-width:520px;
-      margin: 18px auto;
-      padding: 18px;
-    }
-
-    .header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:12px;
-    }
-    .title {
-      font-size:20px;
-      font-weight:600;
-    }
     /* Cards */
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:14px;
-      box-shadow:var(--shadow);
-      margin-bottom:12px;
-    }
-    label{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 18px rgba(12,22,40,0.06);padding:12px;margin-bottom:12px}
 
-    .row{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .input, select, textarea{
-      width:100%;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid #e6edf8;
-      background:#fbfdff;
-      font-size:15px;
-      box-sizing:border-box;
-      outline:none;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:12px;
-      background:var(--accent);
-      color:white;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-    }
-    .btn.secondary{
-      background:transparent;
-      color:var(--accent);
-      border:1px solid rgba(0,122,255,0.12);
-      font-weight:600;
-    }
-    .muted {
-      color:var(--muted);
-      font-size:13px;
-    }
+    /* Forms */
+    .row{display:flex;gap:8px}
+    select,input[type=number],textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #e6e9f2;font-size:14px}
+    label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block}
+    button{background:var(--accent);color:white;padding:10px 14px;border-radius:12px;border:0;font-weight:600}
+    button.secondary{background:transparent;color:var(--accent);border:1px solid rgba(10,132,255,0.12)}
 
     /* Checklist list */
-    .checklist{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      margin-top:10px;
-    }
-    .check-item{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:10px;
-      border-radius:12px;
-      background:#fbfdff;
-      border:1px solid #eef6ff;
-    }
-    .check-item label{margin:0; font-weight:500}
+    .checklist-item{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:10px}
+    .checklist-list{display:flex;flex-direction:column;gap:6px}
 
-    /* Table for Rekap */
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:14px;
-    }
-    th, td{
-      padding:8px 6px;
-      border-bottom:1px solid #f0f4fb;
-      text-align:center;
-    }
-    th{font-size:12px; color:var(--muted); font-weight:600}
-    .percent {
-      font-weight:700;
-      color:var(--accent);
-    }
+    /* Bottom nav */
+    .bottom-nav{position:fixed;left:8px;right:8px;bottom:12px;height:62px;background:rgba(255,255,255,0.9);border-radius:22px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 10px 30px rgba(11,19,32,0.08)}
+    .tab{flex:1;text-align:center;padding:6px 8px;border-radius:16px;color:var(--muted);font-weight:600}
+    .tab.active{color:var(--accent)}
+
+    /* Table for rekap */
+    .table{width:100%;border-collapse:collapse;font-size:13px}
+    .table th,.table td{padding:8px;border-bottom:1px solid #f1f3f8;text-align:left}
+    .table th{color:var(--muted);font-weight:600}
 
     /* Journal cards */
-    .journal-card{
-      border-radius:12px;
-      padding:12px;
-      background:#fff;
-      box-shadow:var(--shadow);
-      margin-bottom:10px;
-    }
-    .journal-meta{font-size:12px; color:var(--muted); margin-bottom:6px}
-    .small{
-      font-size:13px;
-      color:var(--muted);
-    }
+    .journal-card{padding:12px;margin-bottom:10px;border-radius:12px}
+    .journal-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
 
-    /* bottom nav */
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:12px;
-      display:flex;
-      justify-content:center;
-      pointer-events:none;
-    }
-    .nav-inner{
-      width:100%;
-      max-width:520px;
-      margin:0 12px;
-      background:rgba(255,255,255,0.95);
-      border-radius:20px;
-      padding:8px;
-      display:flex;
-      justify-content:space-around;
-      box-shadow:0 6px 18px rgba(12,18,40,0.08);
-      pointer-events:auto;
-    }
-    .tab{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-      padding:6px 12px;
-      color:var(--muted);
-      font-size:12px;
-      cursor:pointer;
-      border-radius:12px;
-    }
-    .tab.active{
-      color:var(--accent);
-      background:rgba(0,122,255,0.08);
-    }
-
-    /* responsive tweak */
-    @media (max-width:420px){
-      .app{ padding:12px; margin:12px}
-      body{padding-bottom:110px}
-    }
+    /* Small screens spacing */
+    @media(min-width:600px){main{max-width:720px;margin:0 auto}}
   </style>
 </head>
 <body>
-  <div class="app" id="app">
-    <div class="header">
-      <div class="title" id="pageTitle">Checklist</div>
-      <div class="small muted" id="todayLabel"></div>
-    </div>
+  <div class="app">
+    <header>
+      <div class="title">Time Boxing Checklist</div>
+      <div style="font-size:12px;color:var(--muted);">Simple PWA — data saved to localStorage</div>
+    </header>
 
-    <!-- PAGE: Checklist -->
-    <div id="page-checklist" class="page">
-      <div class="card">
-        <label>Pilih Tanggal</label>
-        <div class="row">
-          <select id="cbDay" aria-label="hari"></select>
-          <select id="cbMonth" aria-label="bulan"></select>
-          <select id="cbYear" aria-label="tahun"></select>
-          <button class="btn" id="btnShowChecklist">Tampilkan</button>
-        </div>
-      </div>
-
-      <div id="checklistContainer" style="display:none;">
+    <main>
+      <!-- Checklist Page -->
+      <section id="page-checklist" class="page">
         <div class="card">
-          <div class="muted">Checklist tugas</div>
-          <div class="checklist" id="checkItems">
-            <!-- populated by JS -->
+          <label>Pilih Tanggal</label>
+          <div class="row">
+            <select id="cb-day"></select>
+            <select id="cb-month"></select>
+            <select id="cb-year"></select>
+            <button id="btn-show">Tampilkan</button>
           </div>
-          <div style="margin-top:12px; display:flex; gap:8px;">
-            <button class="btn" id="btnSaveChecklist">Simpan</button>
-            <button class="btn secondary" id="btnClearChecklist">Kosongkan</button>
+        </div>
+
+        <div id="checklist-area" style="display:none">
+          <div class="card">
+            <div class="checklist-list" id="checklist-list"></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+              <button id="btn-save-checklist">Simpan</button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- PAGE: Rekap -->
-    <div id="page-rekap" class="page" style="display:none;">
-      <div class="card">
-        <label>Pilih Bulan & Tahun</label>
-        <div class="row">
-          <select id="rekapMonth"></select>
-          <select id="rekapYear"></select>
-          <button class="btn" id="btnShowRekap">Tampilkan</button>
-          <button class="btn secondary" id="btnRefreshRekap">Refresh</button>
+      <!-- Rekap Page -->
+      <section id="page-rekap" class="page" style="display:none">
+        <div class="card">
+          <label>Pilih Bulan & Tahun</label>
+          <div class="row">
+            <select id="re-month"></select>
+            <select id="re-year"></select>
+            <button id="btn-rekap-show">Tampilkan</button>
+            <button id="btn-rekap-refresh" class="secondary">Refresh</button>
+          </div>
         </div>
-      </div>
-
-      <div id="rekapTableContainer" style="display:none;">
-        <div class="card" style="overflow:auto;">
-          <table id="rekapTable">
-            <thead>
-              <tr>
-                <th>Tanggal</th>
-                <th>Subuh</th>
-                <th>Duha</th>
-                <th>Istighfar 500x</th>
-                <th>Push Up 50x</th>
-                <th>Podcast</th>
-                <th>Hafalan 5 kalimat</th>
-                <th>Persen</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+        <div id="rekap-table-area" style="display:none">
+          <div class="card" style="overflow:auto">
+            <table class="table" id="rekap-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Sholat Subuh</th>
+                  <th>Sholat Duha</th>
+                  <th>Istighfar 500x</th>
+                  <th>Push Up 50x</th>
+                  <th>Podcast</th>
+                  <th>Hafalan 5</th>
+                  <th>Persen</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- PAGE: Jurnal -->
-    <div id="page-jurnal" class="page" style="display:none;">
-      <div class="card">
-        <label>Pilih Tanggal</label>
-        <div class="row" style="margin-bottom:10px;">
-          <select id="jDay"></select>
-          <select id="jMonth"></select>
-          <select id="jYear"></select>
+      <!-- Jurnal Page -->
+      <section id="page-jurnal" class="page" style="display:none">
+        <div class="card">
+          <label>Pilih Tanggal</label>
+          <div class="row">
+            <select id="j-day"></select>
+            <select id="j-month"></select>
+            <select id="j-year"></select>
+            <button id="btn-j-show">Tampilkan</button>
+          </div>
         </div>
 
-        <label>Hal-hal yang perlu dicatat hari ini</label>
-        <textarea id="txtToday" rows="3" placeholder="Tuliskan catatan..." class="input"></textarea>
-
-        <label style="margin-top:8px">Apa yang akan dilakukan besok</label>
-        <textarea id="txtTomorrow" rows="3" placeholder="Rencana besok..." class="input"></textarea>
-
-        <div style="margin-top:10px; display:flex; gap:8px;">
-          <button class="btn" id="btnSaveJournal">Simpan</button>
-          <button class="btn secondary" id="btnClearJournal">Kosongkan</button>
+        <div id="jurnal-area" style="display:none">
+          <div class="card">
+            <label>Hal-hal yang perlu dicatat hari ini</label>
+            <textarea id="note-today" rows="4"></textarea>
+            <label style="margin-top:8px">Apa yang akan dilakukan besok</label>
+            <textarea id="note-tomorrow" rows="3"></textarea>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+              <button id="btn-save-journal">Simpan</button>
+            </div>
+          </div>
+          <div id="journal-list"></div>
         </div>
-      </div>
+      </section>
 
-      <div id="journalList" style="margin-top:12px;">
-        <!-- cards appended here -->
-      </div>
-    </div>
+    </main>
 
-  </div>
-
-  <!-- bottom nav -->
-  <div class="bottom-nav" role="navigation" aria-label="navigasi">
-    <div class="nav-inner">
-      <div class="tab active" data-page="checklist" id="tab-checklist">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M9 11l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div>Checklist</div>
-      </div>
-      <div class="tab" data-page="rekap" id="tab-rekap">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg>
-        <div>Rekap</div>
-      </div>
-      <div class="tab" data-page="jurnal" id="tab-jurnal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 4H8v16H6V4a2 2 0 0 1 2-2h6v2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <div>Jurnal</div>
-      </div>
-    </div>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" role="navigation">
+      <div class="tab active" data-target="page-checklist">Checklist</div>
+      <div class="tab" data-target="page-rekap">Rekap</div>
+      <div class="tab" data-target="page-jurnal">Jurnal</div>
+    </nav>
   </div>
 
   <script>
-    /* ====== App constants & helpers ====== */
-
-    const TASKS = [
-      {key:'subuh', label:'sholat subuh tepat waktu'},
-      {key:'duha', label:'sholat duha'},
-      {key:'istighfar', label:'istighfar 500x'},
-      {key:'pushup', label:'push up 50x'},
-      {key:'podcast', label:'mendengarkan podcast min 1 video'},
-      {key:'hafal', label:'menghafal 5 kalimat bahasa inggris'}
+    /* ========= Static checklist items ========= */
+    const CHECK_ITEMS = [
+      { key: 'subuh', label: 'Sholat Subuh tepat waktu' },
+      { key: 'duha', label: 'Sholat Duha' },
+      { key: 'istighfar', label: 'Istighfar 500x' },
+      { key: 'pushup', label: 'Push Up 50x' },
+      { key: 'podcast', label: 'Mendengarkan podcast min 1 video' },
+      { key: 'hafal', label: 'Menghafal 5 kalimat bahasa inggris' }
     ];
 
-    // format helpers
-    function pad(n){ return n.toString().padStart(2,'0'); }
-    function formatDateYMD(y,m,d){ return ${y}-${pad(m)}-${pad(d)}; }
-    function readableDate(y,m,d){ return ${pad(d)}/${pad(m)}/${y}; }
+    /* ======= Utilities for date and localStorage keys ======== */
+    function pad(n){return n<10? '0'+n: ''+n}
+    function ymdKey(y,m,d){return `${y}-${pad(m)}-${pad(d)}`}
+    function checklistKey(ymd){return `checklist_${ymd}`}
+    function journalKey(ymd){return `journal_${ymd}`}
 
-    // localStorage keys:
-    // checklist: "checklist:YYYY-MM-DD" -> JSON { subuh:true, duha:false, ... }
-    // journals: "journals" -> JSON array [{id, date:'YYYY-MM-DD', today, tomorrow, createdAt}]
-    // simple utility to get / set
-    function saveChecklistFor(dateYMD, data){
-      localStorage.setItem(checklist:${dateYMD}, JSON.stringify(data));
-    }
-    function loadChecklistFor(dateYMD){
-      const v = localStorage.getItem(checklist:${dateYMD});
-      return v ? JSON.parse(v) : null;
+    /* ======== Populate select elements ======= */
+    function populateDaySelect(sel){sel.innerHTML='';for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.text=i;sel.appendChild(o)}}
+    function populateMonthSelect(sel){sel.innerHTML='';for(let i=1;i<=12;i++){let o=document.createElement('option');o.value=i;o.text=i;sel.appendChild(o)}}
+    function populateYearSelect(sel,range=5){
+      sel.innerHTML='';const now=new Date();const start=now.getFullYear()-range;for(let y=start;y<=now.getFullYear()+1;y++){let o=document.createElement('option');o.value=y;o.text=y;sel.appendChild(o)}}
+
+    // On load
+    document.addEventListener('DOMContentLoaded',()=>{
+      // checklist selects
+      populateDaySelect(document.getElementById('cb-day'))
+      populateMonthSelect(document.getElementById('cb-month'))
+      populateYearSelect(document.getElementById('cb-year'))
+
+      // jurnal selects (separate DOM nodes but same values)
+      populateDaySelect(document.getElementById('j-day'))
+      populateMonthSelect(document.getElementById('j-month'))
+      populateYearSelect(document.getElementById('j-year'))
+
+      // rekap selects
+      populateMonthSelect(document.getElementById('re-month'))
+      populateYearSelect(document.getElementById('re-year'))
+
+      // set today's date as default
+      const now=new Date();
+      document.getElementById('cb-day').value=now.getDate();
+      document.getElementById('cb-month').value=now.getMonth()+1;
+      document.getElementById('cb-year').value=now.getFullYear();
+
+      document.getElementById('j-day').value=now.getDate();
+      document.getElementById('j-month').value=now.getMonth()+1;
+      document.getElementById('j-year').value=now.getFullYear();
+
+      document.getElementById('re-month').value=now.getMonth()+1;
+      document.getElementById('re-year').value=now.getFullYear();
+
+      // Init tabs
+      initTabs()
+
+      // Button handlers
+      document.getElementById('btn-show').addEventListener('click', showChecklistForSelectedDate)
+      document.getElementById('btn-save-checklist').addEventListener('click', saveChecklist)
+
+      document.getElementById('btn-rekap-show').addEventListener('click', showRekap)
+      document.getElementById('btn-rekap-refresh').addEventListener('click', showRekap)
+
+      document.getElementById('btn-j-show').addEventListener('click', showJournalForSelectedDate)
+      document.getElementById('btn-save-journal').addEventListener('click', saveJournalEntry)
+
+      // Load journal list initially
+      renderJournalList()
+
+      // Register service worker for PWA
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.register('/service-worker.js').catch(err=>console.log('SW register failed',err))
+      }
+    })
+
+    /* ======= Tab navigation ======= */
+    function initTabs(){
+      document.querySelectorAll('.bottom-nav .tab').forEach(tab=>{
+        tab.addEventListener('click',()=>{
+          document.querySelectorAll('.bottom-nav .tab').forEach(t=>t.classList.remove('active'))
+          tab.classList.add('active')
+          document.querySelectorAll('main .page').forEach(p=>p.style.display='none')
+          document.getElementById(tab.dataset.target).style.display='block'
+          // If showing rekap, refresh table
+          if(tab.dataset.target==='page-rekap'){ document.getElementById('btn-rekap-show').click() }
+        })
+      })
     }
 
-    function loadAllChecklistsForMonth(year, month){ // month 1-based
-      const days = [];
-      const last = new Date(year, month, 0).getDate();
-      for(let d=1; d<=last; d++){
-        const key = checklist:${formatDateYMD(year, month, d)};
-        const v = localStorage.getItem(key);
-        if(v){
-          days.push({date: formatDateYMD(year, month, d), data: JSON.parse(v), day:d});
+    /* ===== Checklist logic ===== */
+    function showChecklistForSelectedDate(){
+      const d = +document.getElementById('cb-day').value
+      const m = +document.getElementById('cb-month').value
+      const y = +document.getElementById('cb-year').value
+      const ymd = ymdKey(y,m,d)
+      const key = checklistKey(ymd)
+      const saved = localStorage.getItem(key)
+      const data = saved ? JSON.parse(saved) : {}
+
+      const container = document.getElementById('checklist-list')
+      container.innerHTML = ''
+      CHECK_ITEMS.forEach(item=>{
+        const row = document.createElement('div')
+        row.className='checklist-item'
+        const input = document.createElement('input')
+        input.type='checkbox'
+        input.id = 'cb_'+item.key
+        input.checked = !!data[item.key]
+        const label = document.createElement('label')
+        label.htmlFor = input.id
+        label.textContent = item.label
+        row.appendChild(input)
+        row.appendChild(label)
+        container.appendChild(row)
+      })
+
+      document.getElementById('checklist-area').style.display='block'
+    }
+
+    function saveChecklist(){
+      const d = +document.getElementById('cb-day').value
+      const m = +document.getElementById('cb-month').value
+      const y = +document.getElementById('cb-year').value
+      const ymd = ymdKey(y,m,d)
+      const key = checklistKey(ymd)
+      const payload = {}
+      CHECK_ITEMS.forEach(item=>{
+        const el = document.getElementById('cb_'+item.key)
+        payload[item.key] = !!el && el.checked
+      })
+      payload._savedAt = new Date().toISOString()
+      localStorage.setItem(key, JSON.stringify(payload))
+      alert('Checklist disimpan untuk ' + ymd)
+    }
+
+    /* ===== Rekap logic ===== */
+    function showRekap(){
+      const m = +document.getElementById('re-month').value
+      const y = +document.getElementById('re-year').value
+      const tbody = document.querySelector('#rekap-table tbody')
+      tbody.innerHTML = ''
+
+      // loop days in month
+      const daysInMonth = new Date(y, m, 0).getDate()
+      for(let d=1; d<=daysInMonth; d++){
+        const ymd = ymdKey(y,m,d)
+        const key = checklistKey(ymd)
+        const saved = localStorage.getItem(key)
+        const row = document.createElement('tr')
+
+        const tdDate = document.createElement('td')
+        tdDate.textContent = ymd
+        row.appendChild(tdDate)
+
+        let completedCount = 0
+        const total = CHECK_ITEMS.length
+
+        if(saved){
+          const data = JSON.parse(saved)
+          CHECK_ITEMS.forEach(item=>{
+            const td = document.createElement('td')
+            const val = !!data[item.key]
+            td.textContent = val ? '✓' : ''
+            row.appendChild(td)
+            if(val) completedCount++
+          })
         } else {
-          days.push({date: formatDateYMD(year, month, d), data: null, day:d});
+          // not saved, show empty cells
+          for(let i=0;i<total;i++){const td=document.createElement('td');td.textContent='';row.appendChild(td)}
+        }
+
+        // persen
+        const tdPercent = document.createElement('td')
+        const percent = Math.round((completedCount/total)*100)
+        tdPercent.textContent = percent + '%'
+        row.appendChild(tdPercent)
+
+        tbody.appendChild(row)
+      }
+
+      document.getElementById('rekap-table-area').style.display = 'block'
+    }
+
+    /* ===== Journal logic ===== */
+    function showJournalForSelectedDate(){
+      const d = +document.getElementById('j-day').value
+      const m = +document.getElementById('j-month').value
+      const y = +document.getElementById('j-year').value
+      const ymd = ymdKey(y,m,d)
+      const key = journalKey(ymd)
+      const saved = localStorage.getItem(key)
+      if(saved){
+        const data = JSON.parse(saved)
+        document.getElementById('note-today').value = data.today || ''
+        document.getElementById('note-tomorrow').value = data.tomorrow || ''
+      } else {
+        document.getElementById('note-today').value = ''
+        document.getElementById('note-tomorrow').value = ''
+      }
+      document.getElementById('jurnal-area').style.display='block'
+    }
+
+    function saveJournalEntry(){
+      const d = +document.getElementById('j-day').value
+      const m = +document.getElementById('j-month').value
+      const y = +document.getElementById('j-year').value
+      const ymd = ymdKey(y,m,d)
+      const key = journalKey(ymd)
+      const payload = {
+        today: document.getElementById('note-today').value.trim(),
+        tomorrow: document.getElementById('note-tomorrow').value.trim(),
+        _savedAt: new Date().toISOString(),
+        _ymd: ymd
+      }
+      localStorage.setItem(key, JSON.stringify(payload))
+      alert('Jurnal disimpan untuk ' + ymd)
+      renderJournalList()
+    }
+
+    function renderJournalList(){
+      // collect all keys that start with journal_
+      const list = []
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i)
+        if(k && k.indexOf('journal_')===0){
+          try{
+            const data = JSON.parse(localStorage.getItem(k))
+            list.push({key:k,data})
+          }catch(e){console.warn('invalid journal',k)}
         }
       }
-      return days;
+      // sort by savedAt desc
+      list.sort((a,b)=>{
+        const ta = a.data._savedAt || '1970'
+        const tb = b.data._savedAt || '1970'
+        return tb.localeCompare(ta)
+      })
+
+      const container = document.getElementById('journal-list')
+      container.innerHTML=''
+      list.forEach(item=>{
+        const card = document.createElement('div')
+        card.className='card journal-card'
+        const meta = document.createElement('div')
+        meta.className='journal-meta'
+        meta.textContent = item.data._ymd + ' — ' + (new Date(item.data._savedAt).toLocaleString())
+        card.appendChild(meta)
+
+        const t = document.createElement('div')
+        t.innerHTML = `<strong>Hari ini</strong><p>${escapeHtml(item.data.today || '')}</p><strong>Besok</strong><p>${escapeHtml(item.data.tomorrow || '')}</p>`
+        card.appendChild(t)
+
+        const editBtn = document.createElement('button')
+        editBtn.className='secondary'
+        editBtn.style.marginTop='8px'
+        editBtn.textContent='Edit'
+        editBtn.addEventListener('click',()=>{
+          // load into jurnal form for editing
+          const parts = item.key.split('_')
+          const ymd = parts[1]
+          const [y,m,d] = ymd.split('-')
+          document.getElementById('j-year').value = y
+          document.getElementById('j-month').value = +m
+          document.getElementById('j-day').value = +d
+          showJournalForSelectedDate()
+          document.getElementById('note-today').value = item.data.today || ''
+          document.getElementById('note-tomorrow').value = item.data.tomorrow || ''
+        })
+
+        card.appendChild(editBtn)
+        container.appendChild(card)
+      })
     }
 
-    // Journals stored centrally under 'journals' as array
-    function loadJournals(){
-      const v = localStorage.getItem('journals');
-      return v ? JSON.parse(v) : [];
-    }
-    function saveJournals(arr){
-      localStorage.setItem('journals', JSON.stringify(arr));
-    }
-
-    // generate unique id (simple)
-    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
-
-    /* ====== DOM references ====== */
-    const pageTitle = document.getElementById('pageTitle');
-    const todayLabel = document.getElementById('todayLabel');
-
-    // checklist
-    const cbDay = document.getElementById('cbDay');
-    const cbMonth = document.getElementById('cbMonth');
-    const cbYear = document.getElementById('cbYear');
-    const btnShowChecklist = document.getElementById('btnShowChecklist');
-    const checklistContainer = document.getElementById('checklistContainer');
-    const checkItems = document.getElementById('checkItems');
-    const btnSaveChecklist = document.getElementById('btnSaveChecklist');
-    const btnClearChecklist = document.getElementById('btnClearChecklist');
-
-    // rekap
-    const rekapMonth = document.getElementById('rekapMonth');
-    const rekapYear = document.getElementById('rekapYear');
-    const btnShowRekap = document.getElementById('btnShowRekap');
-    const btnRefreshRekap = document.getElementById('btnRefreshRekap');
-    const rekapTableContainer = document.getElementById('rekapTableContainer');
-    const rekapTableBody = document.querySelector('#rekapTable tbody');
-
-    // jurnal
-    const jDay = document.getElementById('jDay');
-    const jMonth = document.getElementById('jMonth');
-    const jYear = document.getElementById('jYear');
-    const txtToday = document.getElementById('txtToday');
-    const txtTomorrow = document.getElementById('txtTomorrow');
-    const btnSaveJournal = document.getElementById('btnSaveJournal');
-    const btnClearJournal = document.getElementById('btnClearJournal');
-    const journalList = document.getElementById('journalList');
-
-    // tabs
-    const tabs = document.querySelectorAll('.tab');
-
-    /* ====== Initialization ====== */
-    function populateDateSelects(){
-      const now = new Date();
-      const yNow = now.getFullYear();
-      // days 1..31
-      [cbDay, jDay].forEach(sel=>{
-        sel.innerHTML = '';
-        for(let d=1; d<=31; d++){
-          const opt = document.createElement('option');
-          opt.value = d; opt.textContent = d;
-          sel.appendChild(opt);
-        }
-      });
-      // months 1..12
-      const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-      [cbMonth, jMonth, rekapMonth].forEach(sel=>{
-        sel.innerHTML = '';
-        months.forEach((m,i)=>{
-          const opt = document.createElement('option');
-          opt.value = i+1; opt.textContent = m;
-          sel.appendChild(opt);
-        });
-      });
-      // years (5 years range around current)
-      [cbYear, jYear, rekapYear].forEach(sel=>{
-        sel.innerHTML = '';
-        for(let y=yNow-2;y<=yNow+2;y++){
-          const opt = document.createElement('option');
-          opt.value = y; opt.textContent = y;
-          sel.appendChild(opt);
-        }
-      });
-      // set defaults to today
-      cbDay.value = now.getDate();
-      cbMonth.value = now.getMonth()+1;
-      cbYear.value = now.getFullYear();
-
-      jDay.value = now.getDate();
-      jMonth.value = now.getMonth()+1;
-      jYear.value = now.getFullYear();
-
-      rekapMonth.value = now.getMonth()+1;
-      rekapYear.value = now.getFullYear();
-    }
-
-    function updateTodayLabel(){
-      const now = new Date();
-      todayLabel.textContent = readableDate(now.getFullYear(), now.getMonth()+1, now.getDate());
-    }
-
-    // build checklist UI (checkboxes)
-    function renderChecklistUI(state = null){
-      checkItems.innerHTML = '';
-      TASKS.forEach(t=>{
-        const id = 'chk_'+t.key;
-        const wrapper = document.createElement('div');
-        wrapper.className = 'check-item';
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.id = id;
-        input.dataset.key = t.key;
-        input.checked = state ? !!state[t.key] : false;
-        const label = document.createElement('label');
-        label.htmlFor = id;
-        label.textContent = t.label;
-        wrapper.appendChild(input);
-        wrapper.appendChild(label);
-        checkItems.appendChild(wrapper);
-      });
-    }
-
-    /* ====== Page switching ====== */
-    function showPage(name){
-      document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-      document.getElementById('page-'+name).style.display='block';
-      pageTitle.textContent = name.charAt(0).toUpperCase() + name.slice(1);
-      // tabs active
-      tabs.forEach(t=>{
-        if(t.dataset.page === name) t.classList.add('active');
-        else t.classList.remove('active');
-      });
-      // update some dynamic things
-      if(name === 'checklist'){
-        // nothing special
-      } else if(name === 'rekap'){
-        // maybe auto show rekap for selected month?
-      } else if(name === 'jurnal'){
-        // load journals for selected date
-        renderJournalsForSelectedDate();
-      }
-    }
-
-    tabs.forEach(t=>{
-      t.addEventListener('click', ()=> showPage(t.dataset.page));
-    });
-
-    /* ====== Checklist handlers ====== */
-
-    btnShowChecklist.addEventListener('click', ()=>{
-      const d = Number(cbDay.value), m = Number(cbMonth.value), y = Number(cbYear.value);
-      const ymd = formatDateYMD(y,m,d);
-      const data = loadChecklistFor(ymd);
-      renderChecklistUI(data);
-      checklistContainer.style.display = 'block';
-      // store current displayed date for save
-      checklistContainer.dataset.ymd = ymd;
-    });
-
-    btnSaveChecklist.addEventListener('click', ()=>{
-      const ymd = checklistContainer.dataset.ymd;
-      if(!ymd) return alert('Pilih tanggal dulu lalu tekan Tampilkan.');
-      // collect checkbox values
-      const state = {};
-      TASKS.forEach(t=>{
-        const el = document.querySelector(#chk_${t.key});
-        state[t.key] = !!(el && el.checked);
-      });
-      saveChecklistFor(ymd, state);
-      // quick feedback
-      btnSaveChecklist.textContent = 'Tersimpan ✓';
-      setTimeout(()=> btnSaveChecklist.textContent = 'Simpan', 1200);
-    });
-
-    btnClearChecklist.addEventListener('click', ()=>{
-      // uncheck all
-      document.querySelectorAll('#checkItems input[type=checkbox]').forEach(i=>i.checked=false);
-    });
-
-    /* ====== Rekap handlers ====== */
-
-    function buildRekapTable(year, month){
-      rekapTableBody.innerHTML = '';
-      const rows = loadAllChecklistsForMonth(year, month);
-      rows.forEach(r=>{
-        const tr = document.createElement('tr');
-        const tdDate = document.createElement('td');
-        tdDate.textContent = r.day;
-        tr.appendChild(tdDate);
-
-        // count completed tasks
-        let completed = 0;
-        TASKS.forEach(t=>{
-          const td = document.createElement('td');
-          const val = r.data ? !!r.data[t.key] : false;
-          td.textContent = val ? '✓' : '-';
-          tr.appendChild(td);
-          if(val) completed++;
-        });
-
-        const percentTd = document.createElement('td');
-        const percent = Math.round((completed / TASKS.length) * 100);
-        percentTd.innerHTML = <span class="percent">${percent}%</span>;
-        tr.appendChild(percentTd);
-
-        rekapTableBody.appendChild(tr);
-      });
-    }
-
-    btnShowRekap.addEventListener('click', ()=>{
-      const m = Number(rekapMonth.value), y = Number(rekapYear.value);
-      buildRekapTable(y,m);
-      rekapTableContainer.style.display = 'block';
-    });
-    btnRefreshRekap.addEventListener('click', ()=>{
-      // simply rebuild table for selected month to reflect latest localStorage
-      const m = Number(rekapMonth.value), y = Number(rekapYear.value);
-      buildRekapTable(y,m);
-    });
-
-    /* ====== Journal handlers ====== */
-
-    function renderJournalsForSelectedDate(){
-      const d = Number(jDay.value), m = Number(jMonth.value), y = Number(jYear.value);
-      const ymd = formatDateYMD(y,m,d);
-      // load journals for that date, show latest first
-      const all = loadJournals().filter(j => j.date === ymd).sort((a,b)=>b.createdAt - a.createdAt);
-      journalList.innerHTML = '';
-      all.forEach(j => {
-        const card = document.createElement('div');
-        card.className = 'journal-card';
-        card.dataset.id = j.id;
-        card.innerHTML = `
-          <div class="journal-meta">${readableDate(y,m,d)} • ${new Date(j.createdAt).toLocaleString()}</div>
-          <div><strong>Catatan hari ini</strong><div>${escapeHtml(j.today)}</div></div>
-          <div style="margin-top:8px"><strong>Rencana besok</strong><div>${escapeHtml(j.tomorrow)}</div></div>
-          <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end;">
-            <button class="btn secondary btn-edit" data-id="${j.id}">Edit</button>
-            <button class="btn secondary btn-delete" data-id="${j.id}">Hapus</button>
-          </div>
-        `;
-        journalList.appendChild(card);
-      });
-    }
-
-    // escape simple HTML to avoid injection in display
     function escapeHtml(s){
-      if(!s) return '';
-      return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\n','<br>');
+      if(!s) return ''
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')
     }
 
-    btnSaveJournal.addEventListener('click', ()=>{
-      const d = Number(jDay.value), m = Number(jMonth.value), y = Number(jYear.value);
-      const ymd = formatDateYMD(y,m,d);
-      const todayText = txtToday.value.trim();
-      const tomorrowText = txtTomorrow.value.trim();
-      if(!todayText && !tomorrowText) return alert('Isi minimal salah satu textarea sebelum simpan.');
-
-      const journals = loadJournals();
-      // create new entry
-      const newEntry = { id: uid(), date: ymd, today: todayText, tomorrow: tomorrowText, createdAt: Date.now() };
-      journals.push(newEntry);
-      saveJournals(journals);
-      // reset fields
-      txtToday.value = '';
-      txtTomorrow.value = '';
-      renderJournalsForSelectedDate();
-      btnSaveJournal.textContent = 'Tersimpan ✓';
-      setTimeout(()=> btnSaveJournal.textContent = 'Simpan', 1000);
-    });
-
-    btnClearJournal.addEventListener('click', ()=>{
-      txtToday.value = '';
-      txtTomorrow.value = '';
-    });
-
-    // delegate edit/delete buttons
-    journalList.addEventListener('click', (e)=>{
-      const target = e.target;
-      if(target.classList.contains('btn-delete')){
-        const id = target.dataset.id;
-        if(!confirm('Hapus catatan ini?')) return;
-        let journals = loadJournals();
-        journals = journals.filter(j=>j.id !== id);
-        saveJournals(journals);
-        renderJournalsForSelectedDate();
-      } else if(target.classList.contains('btn-edit')){
-        const id = target.dataset.id;
-        const journals = loadJournals();
-        const entry = journals.find(j=>j.id === id);
-        if(!entry) return alert('Catatan tidak ditemukan.');
-        // populate inputs to allow update: we will remove old entry and allow user to re-save (or implement update inline)
-        txtToday.value = entry.today;
-        txtTomorrow.value = entry.tomorrow;
-        // remove old entry so saving creates a new with new timestamp (edit mode)
-        const remaining = journals.filter(j=>j.id !== id);
-        saveJournals(remaining);
-        renderJournalsForSelectedDate();
-      }
-    });
-
-    /* ====== Misc utilities ====== */
-    // basic service worker registration
-    if('serviceWorker' in navigator){
-      window.addEventListener('load', function(){
-        navigator.serviceWorker.register('/sw.js').then(function(reg){
-          console.log('SW registered', reg);
-        }).catch(function(err){
-          console.log('SW reg failed', err);
-        });
-      });
-    }
-
-    /* ====== Boot ====== */
-    populateDateSelects();
-    updateTodayLabel();
-    renderChecklistUI(); // empty initially
-
-    // show default page
-    showPage('checklist');
-
-    // show today's date in header
-    (function setTodayHeader(){
-      const now = new Date();
-      todayLabel.textContent = ${readableDate(now.getFullYear(), now.getMonth()+1, now.getDate())};
-    })();
-
-    // when date selectors in jurnal change, reload list
-    [jDay,jMonth,jYear].forEach(sel=>{
-      sel.addEventListener('change', renderJournalsForSelectedDate);
-    });
-
-    // when month/year in rekap change, auto hide table until user hits Tampilkan
-    [rekapMonth, rekapYear].forEach(sel=>{
-      sel.addEventListener('change', ()=> rekapTableContainer.style.display='none');
-    });
-
-    // when checklist date changed hide container to prevent confusion
-    [cbDay,cbMonth,cbYear].forEach(sel=>{
-      sel.addEventListener('change', ()=> checklistContainer.style.display='none');
-    });
-
-    /* ====== End of script ====== */
   </script>
 </body>
 </html>
