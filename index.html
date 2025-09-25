@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0A84FF">
-  <title>Time Boxing Checklist (PWA)</title>
+  <title>TIME BOXING CHECKLIST (PWA)</title>
 
   <!-- Link manifest (create file manifest.json with content provided below) -->
   <link rel="manifest" href="/manifest.json">
@@ -46,10 +46,21 @@
     .tab{flex:1;text-align:center;padding:6px 8px;border-radius:16px;color:var(--muted);font-weight:600}
     .tab.active{color:var(--accent)}
 
-    /* Table for rekap */
-    .table{width:100%;border-collapse:collapse;font-size:13px}
-    .table th,.table td{padding:8px;border-bottom:1px solid #f1f3f8;text-align:left}
-    .table th{color:var(--muted);font-weight:600}
+     /* Table for rekap */
+	  .table {
+		width:100%;
+		border-collapse:collapse;
+		font-size:13px;
+	  }
+	  .table th,.table td{
+		padding:8px;
+		border:1px solid #e6e9f2; /* garis setiap kolom */
+		text-align:left;
+	  }
+	  .table th{
+		color:var(--muted);
+		font-weight:600
+	  }
 
     /* Journal cards */
     .journal-card{padding:12px;margin-bottom:10px;border-radius:12px}
@@ -62,8 +73,8 @@
 <body>
   <div class="app">
     <header>
-      <div class="title">Time Boxing Checklist</div>
-      <div style="font-size:12px;color:var(--muted);">Simple PWA — data saved to localStorage</div>
+      <div class="title">TIME BOXING CHECKLIST </div>
+      <div style="font-size:12px;color:var(--muted);">Balya Ibnu Taufik Up To Grow</div>
     </header>
 
     <main>
@@ -375,60 +386,55 @@
       renderJournalList()
     }
 
-    function renderJournalList(){
-      // collect all keys that start with journal_
-      const list = []
-      for(let i=0;i<localStorage.length;i++){
-        const k = localStorage.key(i)
-        if(k && k.indexOf('journal_')===0){
-          try{
-            const data = JSON.parse(localStorage.getItem(k))
-            list.push({key:k,data})
-          }catch(e){console.warn('invalid journal',k)}
-        }
-      }
-      // sort by savedAt desc
-      list.sort((a,b)=>{
-        const ta = a.data._savedAt || '1970'
-        const tb = b.data._savedAt || '1970'
-        return tb.localeCompare(ta)
-      })
-
-      const container = document.getElementById('journal-list')
-      container.innerHTML=''
-      list.forEach(item=>{
-        const card = document.createElement('div')
-        card.className='card journal-card'
-        const meta = document.createElement('div')
-        meta.className='journal-meta'
-        meta.textContent = item.data._ymd + ' — ' + (new Date(item.data._savedAt).toLocaleString())
-        card.appendChild(meta)
-
-        const t = document.createElement('div')
-        t.innerHTML = `<strong>Hari ini</strong><p>${escapeHtml(item.data.today || '')}</p><strong>Besok</strong><p>${escapeHtml(item.data.tomorrow || '')}</p>`
-        card.appendChild(t)
-
-        const editBtn = document.createElement('button')
-        editBtn.className='secondary'
-        editBtn.style.marginTop='8px'
-        editBtn.textContent='Edit'
-        editBtn.addEventListener('click',()=>{
-          // load into jurnal form for editing
-          const parts = item.key.split('_')
-          const ymd = parts[1]
-          const [y,m,d] = ymd.split('-')
-          document.getElementById('j-year').value = y
-          document.getElementById('j-month').value = +m
-          document.getElementById('j-day').value = +d
-          showJournalForSelectedDate()
-          document.getElementById('note-today').value = item.data.today || ''
-          document.getElementById('note-tomorrow').value = item.data.tomorrow || ''
-        })
-
-        card.appendChild(editBtn)
-        container.appendChild(card)
-      })
+	function renderJournalList(){
+  const list = []
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i)
+    if(k && k.indexOf('journal_')===0){
+      try{
+        const data = JSON.parse(localStorage.getItem(k))
+        list.push({key:k,data})
+      }catch(e){console.warn('invalid journal',k)}
     }
+  }
+  list.sort((a,b)=>{
+    const ta = a.data._savedAt || '1970'
+    const tb = b.data._savedAt || '1970'
+    return tb.localeCompare(ta)
+  })
+
+  const container = document.getElementById('journal-list')
+  container.innerHTML=''
+  list.forEach(item=>{
+    const card = document.createElement('div')
+    card.className='card journal-card'
+    const meta = document.createElement('div')
+    meta.className='journal-meta'
+    meta.textContent = item.data._ymd + ' — ' + (new Date(item.data._savedAt).toLocaleString())
+    card.appendChild(meta)
+
+    const t = document.createElement('div')
+    t.innerHTML = `<strong>Hari ini</strong><p>${escapeHtml(item.data.today || '')}</p>
+                   <strong>Besok</strong><p>${escapeHtml(item.data.tomorrow || '')}</p>`
+    card.appendChild(t)
+
+    // Tombol delete
+    const delBtn = document.createElement('button')
+    delBtn.className='secondary'
+    delBtn.style.marginTop='8px'
+    delBtn.textContent='Delete'
+    delBtn.addEventListener('click',()=>{
+      if(confirm('Hapus jurnal tanggal '+item.data._ymd+'?')){
+        localStorage.removeItem(item.key)
+        renderJournalList()
+      }
+    })
+
+    card.appendChild(delBtn)
+    container.appendChild(card)
+  })
+}
+
 
     function escapeHtml(s){
       if(!s) return ''
