@@ -1,17 +1,17 @@
-{
-  "name": "Time Boxing Checklist",
-  "short_name": "TB Checklist",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f2f5fb",
-  "theme_color": "#007aff",
-  "description": "Checklist harian + rekap bulanan + jurnal — PWA-ready",
-  "icons": [
-    {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='100%25' height='100%25' rx='80' fill='%23007aff'/%3E%3Ctext x='50%25' y='55%25' font-size='260' text-anchor='middle' fill='white' font-family='system-ui, -apple-system, Roboto, Arial'%3ET%3C/text%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
-}
+
+  <!-- Below are recommended extra files you must place in the same Netlify site root. -->
+  <!-- manifest.json (create at /manifest.json) -->
+  <!--
+  {
+    "name": "Time Boxing Checklist",
+    "short_name": "TimeBox",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#f6f7fb",
+    "theme_color": "#0A84FF",
+    "icons": [
+      {"src":"/icon-192.png","sizes":"192x192","type":"image/png"},
+      {"src":"/icon-512.png","sizes":"512x512","type":"image/png"}
+    ]
+  }
+  -->
