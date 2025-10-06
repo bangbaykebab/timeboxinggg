@@ -1,0 +1,104 @@
+/* ====== UangKu Modern Theme ====== */
+body {
+  background-color: #0B0D2A;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #ccc;
+  margin-top: 0;
+}
+
+.card {
+  background-color: #5A7580;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.balance {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.small-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.small-card div {
+  flex: 1;
+  background-color: #5A7580;
+  border-radius: 20px;
+  padding: 15px;
+  text-align: center;
+}
+
+.month-item, .day-item {
+  background-color: #6B8A8F;
+  border-radius: 25px;
+  padding: 15px 20px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fab {
+  position: fixed;
+  bottom: 30px;
+  background-color: #2AC3A2;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.fab.left {
+  left: 30px;
+}
+
+.fab.right {
+  right: 30px;
+}
+
+input, button, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 15px;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button {
+  background-color: #2AC3A2;
+  color: white;
+  font-weight: 600;
+}
+
+button.cancel {
+  background-color: #20234A;
+}
